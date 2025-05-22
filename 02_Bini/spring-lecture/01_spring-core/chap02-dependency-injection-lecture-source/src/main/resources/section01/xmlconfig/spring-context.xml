@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- 💡 XML에서는 인터페이스로 Bean 등록 ❌
+         따라서 인터페이스가 아닌 실제 구현체(PersonalAccount)로 등록 -->
+    <bean id="account" class="com.ohgiraffers.common.PersonalAccount">
+        <!-- bankCode 필드에 20 설정 -->
+        <constructor-arg name="bankCode" value="20"/>
+        <!-- accNo 필드에 계좌번호 설정 -->
+        <constructor-arg name="accNo" value="110-234-56789"/>
+    </bean>
+
+    <!-- ✅ 1. 생성자 주입 방식 (주석 처리된 부분)
+    <bean id="member" class="com.ohgiraffers.common.MemberDTO">
+        <constructor-arg name="sequence" value="1" />
+        <constructor-arg name="name" value="홍길동" />
+        <constructor-arg name="phone" value="010-1234-5678" />
+        <constructor-arg name="email" value="hong@gmail.com" />
+        <constructor-arg name="personalAccount" ref="account" />
+    </bean>
+    -->
+
+    <!-- ✅ 2. Setter 메서드를 통한 의존성 주입 방식 -->
+    <bean id="member" class="com.ohgiraffers.common.MemberDTO">
+        <!-- setter로 각 속성 값을 주입 -->
+        <property name="sequence" value="1" />
+        <property name="name" value="홍길동" />
+        <property name="phone" value="010-1234-5678" />
+        <property name="email" value="hong@gmail.com" />
+        <!-- setter로 account 객체를 주입 (ref: 다른 bean 참조) -->
+        <property name="personalAccount" ref="account" />
+    </bean>
+
+</beans>
