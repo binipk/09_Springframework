@@ -9,10 +9,8 @@ import lombok.ToString;
 @Setter
 @ToString
 @AllArgsConstructor
-
 public class MemberDTO {
 
     private Long id;
-
     private String name;
 }
