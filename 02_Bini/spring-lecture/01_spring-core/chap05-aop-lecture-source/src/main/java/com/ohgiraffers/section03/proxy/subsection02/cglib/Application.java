@@ -1,27 +1,23 @@
-package com.ohgiraffers.section03.proxy.subsection01.dynamic;
+package com.ohgiraffers.section03.proxy.subsection02.cglib;
 
-import com.ohgiraffers.section03.proxy.common.Student;
-import com.ohgiraffers.section03.proxy.common.StudentImpl;
 
-import java.lang.reflect.Proxy;
+import com.ohgiraffers.section03.proxy.common.OhgiraffersStudents;
+import org.springframework.cglib.proxy.Enhancer;
 
 public class Application {
+
     public static void main(String[] args) {
 
-        // 1. 실제 대상 객체
-        Student target = new StudentImpl();
+        /*
+        * 2. CGLib 방식
+        * Target Object의 타입이 Class여도 가능하다
+        * */
+        OhgiraffersStudents ohgiraffersStudent = new OhgiraffersStudents();
+        Handler handler = new Handler(ohgiraffersStudent);
 
-        // 2. 프록시 핸들러 설정
-        Handler handler = new Handler(target);
+        OhgiraffersStudents proxy
+                = (OhgiraffersStudents) Enhancer.create(OhgiraffersStudents.class, handler);
 
-        // 3. 프록시 객체 생성
-        Student proxy = (Student) Proxy.newProxyInstance(
-                Student.class.getClassLoader(),
-                new Class[]{Student.class},
-                handler
-        );
-
-        // 4. 프록시 객체 메서드 호출
-        proxy.study(16);  // → Handler에서 가로채서 로그 출력 포함됨
+        proxy.study(16);
     }
 }
