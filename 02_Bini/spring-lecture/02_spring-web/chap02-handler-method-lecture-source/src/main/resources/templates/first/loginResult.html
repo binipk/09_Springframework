@@ -5,12 +5,8 @@
   <title>loginResult</title>
 </head>
 <body>
-<h1>Session에 담긴 값 확인</h1>
-
-<!-- session 스코프에 있는 id 값을 출력 -->
-<h2 th:text="${session.id}">세션 ID 출력 영역</h2>
-
-<!-- 메인 페이지로 이동하는 버튼 -->
-<button onclick="location.href='/'">메인으로</button>
+  <h1>Session에 담긴 값 확인</h1>
+  <h2 th:text="${session.id}"></h2>
+  <button onclick="location.href='logout'">로그아웃</button>
 </body>
 </html>
