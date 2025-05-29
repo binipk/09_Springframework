@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>직원 등록</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>직원 등록</h2>
+        <form th:action="@{/employee/regist}" method="post">
+            <div class="form-group">
+                <label for="empName">이름</label>
+                <input type="text" class="form-control" id="empName" name="empName" required>
+            </div>
+            <div class="form-group">
+                <label for="empNo">주민번호</label>
+                <input type="text" class="form-control" id="empNo" name="empNo" required>
+            </div>
+            <div class="form-group">
+                <label for="email">이메일</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">전화번호</label>
+                <input type="tel" class="form-control" id="phone" name="phone" required>
+            </div>
+            <div class="form-group">
+                <label for="deptCode">부서</label>
+                <input type="text" class="form-control" id="deptCode" name="deptCode" required>
+            </div>
+            <div class="form-group">
+                <label for="jobCode">직급</label>
+                <input type="text" class="form-control" id="jobCode" name="jobCode" required>
+            </div>
+            <div class="form-group">
+                <label for="salLevel">급여등급</label>
+                <input type="text" class="form-control" id="salLevel" name="salLevel" required>
+            </div>
+            <div class="form-group">
+                <label for="salary">급여</label>
+                <input type="number" class="form-control" id="salary" name="salary" required>
+            </div>
+            <div class="form-group">
+                <label for="bonus">보너스</label>
+                <input type="number" class="form-control" id="bonus" name="bonus" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label for="managerId">관리자 사번</label>
+                <input type="number" class="form-control" id="managerId" name="managerId">
+            </div>
+            <div class="form-group">
+                <label for="hireDate">입사일</label>
+                <input type="date" class="form-control" id="hireDate" name="hireDate" required>
+            </div>
+            <button type="submit" class="btn btn-primary">등록</button>
+            <a th:href="@{/employee/list}" class="btn btn-secondary">목록으로</a>
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html> 
