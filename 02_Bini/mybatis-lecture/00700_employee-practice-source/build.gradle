@@ -5,47 +5,52 @@ plugins {
 
 group = 'com.ohgiraffers'
 version = '1.0-SNAPSHOT'
+sourceCompatibility = '17'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    // Spring MVC
-    implementation 'org.springframework:spring-webmvc:5.3.31'
-    implementation 'org.springframework:spring-jdbc:5.3.31'
-    implementation 'org.springframework:spring-tx:5.3.31'
-    implementation 'org.springframework:spring-context:5.3.31'
+
+    // SLF4J 2.0.x + simple logger
+    implementation 'org.slf4j:slf4j-api:2.0.9'
+    implementation 'org.slf4j:slf4j-simple:2.0.9'
+
+    // Spring Framework
     implementation 'org.springframework:spring-core:5.3.31'
+    implementation 'org.springframework:spring-context:5.3.31'
     implementation 'org.springframework:spring-beans:5.3.31'
     implementation 'org.springframework:spring-aop:5.3.31'
     implementation 'org.springframework:spring-expression:5.3.31'
-    
+    implementation 'org.springframework:spring-webmvc:5.3.31'
+    implementation 'org.springframework:spring-jdbc:5.3.31'
+    implementation 'org.springframework:spring-tx:5.3.31'
+
     // Thymeleaf
     implementation 'org.thymeleaf:thymeleaf:3.1.2.RELEASE'
     implementation 'org.thymeleaf:thymeleaf-spring5:3.1.2.RELEASE'
-    
+
     // MyBatis
     implementation 'org.mybatis:mybatis:3.5.13'
     implementation 'org.mybatis:mybatis-spring:2.1.1'
-    
-    // MySQL
+
+    // JDBC Driver + Connection Pool
     implementation 'mysql:mysql-connector-java:8.0.33'
-    
-    // Database Connection Pool
     implementation 'org.apache.commons:commons-dbcp2:2.10.0'
-    
-    // Servlet
+
+    // Servlet API (provided by container)
     providedCompile 'javax.servlet:javax.servlet-api:4.0.1'
-    
+
     // Lombok
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
-    
-    // Commons
+
+    // 기타 유틸
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'commons-lang:commons-lang:2.6'
-    
+
+    // JUnit 5
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
 }

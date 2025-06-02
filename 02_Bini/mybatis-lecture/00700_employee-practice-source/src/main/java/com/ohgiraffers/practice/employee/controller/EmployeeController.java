@@ -2,65 +2,55 @@ package com.ohgiraffers.practice.employee.controller;
 
 import com.ohgiraffers.practice.employee.model.dto.EmployeeDTO;
 import com.ohgiraffers.practice.employee.model.service.EmployeeService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
-@RequestMapping("/employee")
 public class EmployeeController {
 
     private final EmployeeService employeeService;
 
-    @Autowired
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
 
-    @GetMapping("/list")
-    public String findAllEmployees(Model model) {
+    public void selectAllEmployees() {
         List<EmployeeDTO> employeeList = employeeService.findAllEmployees();
-        model.addAttribute("employeeList", employeeList);
-        return "employee/list";
+        if (employeeList.isEmpty()) {
+            System.out.println("직원 정보가 없습니다.");
+        } else {
+            for (EmployeeDTO employee : employeeList) {
+                System.out.println(employee);
+            }
+        }
     }
 
-    @GetMapping("/detail/{empId}")
-    public String findEmployeeById(@PathVariable int empId, Model model) {
+    public void selectEmployeeById(int empId) {
         EmployeeDTO employee = employeeService.findEmployeeById(empId);
-        model.addAttribute("employee", employee);
-        return "employee/detail";
+        if (employee == null || "Y".equalsIgnoreCase(employee.getQuitYn())) {
+            System.out.println("해당 ID의 직원이 없거나 퇴사한 상태입니다.");
+        } else {
+            System.out.println(employee);
+        }
     }
 
-    @GetMapping("/regist")
-    public String registPage() {
-        return "employee/regist";
+    public void registEmployee(EmployeeDTO newEmp) {
+        if (employeeService.isDuplicate(newEmp)) {
+            System.out.println("이미 등록된 직원입니다.");
+        } else {
+            employeeService.registEmployee(newEmp);
+            System.out.println("직원 등록 완료");
+        }
     }
 
-    @PostMapping("/regist")
-    public String registEmployee(@ModelAttribute EmployeeDTO employee) {
-        employeeService.registEmployee(employee);
-        return "redirect:/employee/list";
+    public void updateEmployee(EmployeeDTO updatedEmp) {
+        boolean isUpdated = employeeService.updateEmployee(updatedEmp);
+        System.out.println(isUpdated ? "직원 정보 수정 완료" : "해당 직원은 존재하지 않거나 이미 퇴사 처리되었습니다.");
     }
 
-    @GetMapping("/modify/{empId}")
-    public String modifyPage(@PathVariable int empId, Model model) {
-        EmployeeDTO employee = employeeService.findEmployeeById(empId);
-        model.addAttribute("employee", employee);
-        return "employee/modify";
-    }
 
-    @PostMapping("/modify")
-    public String modifyEmployee(@ModelAttribute EmployeeDTO employee) {
-        employeeService.modifyEmployee(employee);
-        return "redirect:/employee/list";
-    }
 
-    @PostMapping("/delete/{empId}")
-    public String deleteEmployee(@PathVariable int empId) {
-        employeeService.deleteEmployee(empId);
-        return "redirect:/employee/list";
+    public void deleteEmployee(int empId) {
+        boolean isDeleted = employeeService.deleteEmployee(empId);
+        System.out.println(isDeleted ? "직원 삭제 완료" : "해당 직원은 존재하지 않거나 이미 퇴사 처리되었습니다.");
     }
 }

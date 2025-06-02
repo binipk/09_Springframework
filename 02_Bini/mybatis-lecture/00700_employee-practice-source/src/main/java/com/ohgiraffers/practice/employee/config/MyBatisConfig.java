@@ -1,5 +1,6 @@
 package com.ohgiraffers.practice.employee.config;
 
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -14,7 +15,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
-import org.apache.commons.dbcp2.BasicDataSource;
 
 @Configuration
 @PropertySource("classpath:config/database.properties")
@@ -48,8 +48,10 @@ public class MyBatisConfig {
     public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
         SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
         sessionFactory.setDataSource(dataSource);
-        sessionFactory.setMapperLocations(new PathMatchingResourcePatternResolver()
-                .getResources("classpath:com/ohgiraffers/practice/employee/model/dao/*.xml"));
+        sessionFactory.setMapperLocations(
+            new PathMatchingResourcePatternResolver()
+                .getResources("classpath:com/ohgiraffers/practice/employee/model/dao/*.xml")
+        );
         return sessionFactory.getObject();
     }
 
@@ -62,4 +64,4 @@ public class MyBatisConfig {
     public PlatformTransactionManager transactionManager(DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
-} 
+}

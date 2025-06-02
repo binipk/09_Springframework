@@ -2,6 +2,7 @@
 <!DOCTYPE configuration
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-config.dtd">
+
 <configuration>
 
     <settings>
@@ -27,4 +28,5 @@
     <mappers>
         <mapper resource="com/ohgiraffers/practice/employee/model/dao/EmployeeMapper.xml"/>
     </mappers>
+
 </configuration>

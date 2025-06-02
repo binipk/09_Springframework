@@ -3,121 +3,86 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-
 <mapper namespace="com.ohgiraffers.practice.employee.model.dao.EmployeeMapper">
 
     <resultMap id="employeeResultMap" type="EmployeeDTO">
-        <id property="empId" column="EMP_ID"/>
-        <result property="empName" column="EMP_NAME"/>
-        <result property="empNo" column="EMP_NO"/>
-        <result property="email" column="EMAIL"/>
-        <result property="phone" column="PHONE"/>
-        <result property="deptCode" column="DEPT_CODE"/>
-        <result property="jobCode" column="JOB_CODE"/>
-        <result property="salLevel" column="SAL_LEVEL"/>
-        <result property="salary" column="SALARY"/>
-        <result property="bonus" column="BONUS"/>
+        <id     property="empId"     column="EMP_ID"/>
+        <result property="empName"   column="EMP_NAME"/>
+        <result property="empNo"     column="EMP_NO"/>
+        <result property="email"     column="EMAIL"/>
+        <result property="phone"     column="PHONE"/>
+        <result property="deptCode"  column="DEPT_CODE"/>
+        <result property="jobCode"   column="JOB_CODE"/>
+        <result property="salLevel"  column="SAL_LEVEL"/>
+        <result property="salary"    column="SALARY"/>
+        <result property="bonus"     column="BONUS"/>
         <result property="managerId" column="MANAGER_ID"/>
-        <result property="hireDate" column="HIRE_DATE"/>
-        <result property="entDate" column="ENT_DATE"/>
-        <result property="entYn" column="ENT_YN"/>
+        <result property="hireDate"  column="HIRE_DATE"/>
+        <result property="quitDate"  column="QUIT_DATE"/>
+        <result property="quitYn"    column="QUIT_YN"/>
     </resultMap>
 
     <select id="selectAllEmployees" resultMap="employeeResultMap">
         SELECT
-            EMP_ID,
-            EMP_NAME,
-            EMP_NO,
-            EMAIL,
-            PHONE,
-            DEPT_CODE,
-            JOB_CODE,
-            SAL_LEVEL,
-            SALARY,
-            BONUS,
-            MANAGER_ID,
-            HIRE_DATE,
-            ENT_DATE,
-            ENT_YN
+        EMP_ID, EMP_NAME, EMP_NO, EMAIL, PHONE,
+        DEPT_CODE, JOB_CODE, SAL_LEVEL,
+        SALARY, BONUS, MANAGER_ID, HIRE_DATE,
+        QUIT_DATE, QUIT_YN
         FROM EMPLOYEE
-        WHERE ENT_YN = 'N'
+        WHERE QUIT_YN = 'N'
     </select>
 
     <select id="selectEmployeeById" resultMap="employeeResultMap">
         SELECT
-            EMP_ID,
-            EMP_NAME,
-            EMP_NO,
-            EMAIL,
-            PHONE,
-            DEPT_CODE,
-            JOB_CODE,
-            SAL_LEVEL,
-            SALARY,
-            BONUS,
-            MANAGER_ID,
-            HIRE_DATE,
-            ENT_DATE,
-            ENT_YN
+        EMP_ID, EMP_NAME, EMP_NO, EMAIL, PHONE,
+        DEPT_CODE, JOB_CODE, SAL_LEVEL,
+        SALARY, BONUS, MANAGER_ID, HIRE_DATE,
+        QUIT_DATE, QUIT_YN
         FROM EMPLOYEE
         WHERE EMP_ID = #{empId}
     </select>
 
     <insert id="insertEmployee" parameterType="EmployeeDTO">
-        INSERT INTO EMPLOYEE
-        (
-            EMP_NAME,
-            EMP_NO,
-            EMAIL,
-            PHONE,
-            DEPT_CODE,
-            JOB_CODE,
-            SAL_LEVEL,
-            SALARY,
-            BONUS,
-            MANAGER_ID,
-            HIRE_DATE,
-            ENT_YN
+        INSERT INTO EMPLOYEE (
+        EMP_NAME, EMP_NO, EMAIL, PHONE,
+        DEPT_CODE, JOB_CODE, SAL_LEVEL,
+        SALARY, BONUS, MANAGER_ID, HIRE_DATE, QUIT_YN
         )
-        VALUES
-        (
-            #{empName},
-            #{empNo},
-            #{email},
-            #{phone},
-            #{deptCode},
-            #{jobCode},
-            #{salLevel},
-            #{salary},
-            #{bonus},
-            #{managerId},
-            #{hireDate},
-            'N'
+        VALUES (
+        #{empName}, #{empNo}, #{email}, #{phone},
+        #{deptCode}, #{jobCode}, #{salLevel},
+        #{salary}, #{bonus}, #{managerId}, #{hireDate}, 'N'
         )
     </insert>
 
-    <update id="updateEmployee" parameterType="EmployeeDTO">
-        UPDATE EMPLOYEE
-        SET
-            EMP_NAME = #{empName},
-            EMP_NO = #{empNo},
-            EMAIL = #{email},
-            PHONE = #{phone},
-            DEPT_CODE = #{deptCode},
-            JOB_CODE = #{jobCode},
-            SAL_LEVEL = #{salLevel},
-            SALARY = #{salary},
-            BONUS = #{bonus},
-            MANAGER_ID = #{managerId}
-        WHERE EMP_ID = #{empId}
+    <update id="updateEmployee" parameterType="com.ohgiraffers.practice.employee.model.dto.EmployeeDTO">
+        UPDATE employee
+        SET emp_name = #{empName},
+        emp_no = #{empNo},
+        email = #{email},
+        phone = #{phone},
+        dept_code = #{deptCode},
+        job_code = #{jobCode},
+        sal_level = #{salLevel},
+        salary = #{salary},
+        bonus = #{bonus},
+        manager_id = #{managerId}
+        WHERE emp_id = #{empId}
+        AND quit_yn = 'N'
     </update>
+
+
+
+
 
     <update id="deleteEmployee">
         UPDATE EMPLOYEE
         SET
-            ENT_YN = 'Y',
-            ENT_DATE = SYSDATE
+        QUIT_YN   = 'Y',
+        QUIT_DATE = NOW()
         WHERE EMP_ID = #{empId}
+        AND QUIT_YN = 'N'
     </update>
+
 
 </mapper>

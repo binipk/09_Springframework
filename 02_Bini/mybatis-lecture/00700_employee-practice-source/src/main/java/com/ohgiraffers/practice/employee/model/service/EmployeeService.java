@@ -1,19 +1,21 @@
 package com.ohgiraffers.practice.employee.model.service;
 
-import com.ohgiraffers.practice.employee.model.dao.EmployeeMapper;
 import com.ohgiraffers.practice.employee.model.dto.EmployeeDTO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import com.ohgiraffers.practice.employee.model.dao.EmployeeMapper;
+import com.ohgiraffers.practice.common.Template;
+import org.apache.ibatis.session.SqlSession;
 
 import java.util.List;
 
-@Service
 public class EmployeeService {
 
     private final EmployeeMapper employeeMapper;
 
-    @Autowired
+    public EmployeeService() {
+        SqlSession sqlSession = Template.getSqlSession();
+        this.employeeMapper = sqlSession.getMapper(EmployeeMapper.class);
+    }
+
     public EmployeeService(EmployeeMapper employeeMapper) {
         this.employeeMapper = employeeMapper;
     }
@@ -26,18 +28,45 @@ public class EmployeeService {
         return employeeMapper.selectEmployeeById(empId);
     }
 
-    @Transactional
     public void registEmployee(EmployeeDTO employee) {
         employeeMapper.insertEmployee(employee);
     }
 
-    @Transactional
-    public void modifyEmployee(EmployeeDTO employee) {
-        employeeMapper.updateEmployee(employee);
+    public boolean updateEmployee(EmployeeDTO employee) {
+        EmployeeDTO existing = employeeMapper.selectEmployeeById(employee.getEmpId());
+
+        if (existing == null || "Y".equalsIgnoreCase(existing.getQuitYn())) {
+            return false;
+        }
+
+        int result = employeeMapper.updateEmployee(employee);
+        return result > 0;
     }
 
-    @Transactional
-    public void deleteEmployee(int empId) {
-        employeeMapper.deleteEmployee(empId);
+
+
+
+
+    public boolean deleteEmployee(int empId) {
+        EmployeeDTO found = employeeMapper.selectEmployeeById(empId);
+        if (found == null || "Y".equalsIgnoreCase(found.getQuitYn())) {
+            return false;
+        }
+        return employeeMapper.deleteEmployee(empId) > 0;
+    }
+
+
+    public boolean isDuplicate(EmployeeDTO employee) {
+        List<EmployeeDTO> existingEmployees = employeeMapper.selectAllEmployees();
+
+        for (EmployeeDTO existing : existingEmployees) {
+            if (existing.getEmpId() == employee.getEmpId()
+                    || (existing.getEmpNo() != null && existing.getEmpNo().equals(employee.getEmpNo()))
+                    || (existing.getEmail() != null && existing.getEmail().equals(employee.getEmail()))
+                    || (existing.getPhone() != null && existing.getPhone().equals(employee.getPhone()))) {
+                return true;
+            }
+        }
+        return false;
     }
 }
