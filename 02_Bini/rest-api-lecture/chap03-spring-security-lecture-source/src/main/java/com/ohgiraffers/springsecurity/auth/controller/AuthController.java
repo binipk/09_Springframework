@@ -6,12 +6,10 @@ import com.ohgiraffers.springsecurity.auth.service.AuthService;
 import com.ohgiraffers.springsecurity.common.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
 
@@ -27,6 +25,30 @@ public class AuthController {
 
         TokenResponse tokenResponse = authService.login(request);
         return buildTokenResponse(tokenResponse);
+    }
+    
+    @PostMapping("/refresh")
+    public ResponseEntity<ApiResponse<TokenResponse>> refreshToken(
+            @CookieValue(name = "refreshToken", required = false) String refreshToken // HttpOnly 쿠키에서 읽어옴
+    ) {
+        if (refreshToken == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // refreshToken이 없으면 401반환함
+        }
+        TokenResponse tokenResponse = authService.refreshToken((refreshToken));
+        return buildTokenResponse(tokenResponse);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponse<TokenResponse>> logout(
+            @CookieValue(name="refreshToken",required=false)String refreshToken) {
+        if (refreshToken != null) {
+            authService.logout(refreshToken);
+        }
+
+        ResponseCookie deleteCookie = createDeleteRefreshTokenCookie(); // 만료용 쿠키 생성
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, deleteCookie.toString())
+                .body(ApiResponse.success(null));
     }
 
     /* accessToken과 refreshToken을 body와 쿠키에 담아서 반환할거임*/

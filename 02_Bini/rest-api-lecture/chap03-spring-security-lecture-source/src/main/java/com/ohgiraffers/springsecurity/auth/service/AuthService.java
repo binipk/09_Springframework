@@ -82,4 +82,10 @@ public class AuthService {
                 .refreshToken(refreshToken)
                 .build();
     }
+
+    public void logout(String refreshToken) {
+        jwtTokenProvider.validateToken(refreshToken);
+        String username = jwtTokenProvider.getUsernameFromJWT(refreshToken);
+        refreshTokenRepository.deleteById(username);
+    }
 }

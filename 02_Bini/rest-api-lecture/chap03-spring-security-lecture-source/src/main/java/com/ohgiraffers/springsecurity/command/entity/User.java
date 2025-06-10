@@ -27,4 +27,4 @@ public class User {
         this.password = encodedPassword;
     }
 
-}
+}   

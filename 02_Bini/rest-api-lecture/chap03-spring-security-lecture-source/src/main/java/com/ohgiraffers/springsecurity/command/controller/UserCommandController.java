@@ -20,6 +20,7 @@ public class UserCommandController {
 
     @PostMapping("/users")
     public ResponseEntity<ApiResponse<Void>> register(@RequestBody UserCreateRequest request) {
+        System.out.println("ttttttt");
         userCommandService.registUser(request);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
