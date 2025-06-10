@@ -1,26 +1,17 @@
-### 문자열 응답
+### 기본문자열
 GET http://localhost:8080/response/hello
 
-### 객체 응답
+### Object 응답
 GET http://localhost:8080/response/message
 
-### 리스트 응답
+### List 응답
 GET http://localhost:8080/response/list
 
-### 맵 응답
+### Map 응답
 GET http://localhost:8080/response/map
+
+### file 응답
+GET http://localhost:8080/response/image
 
 ### ResponseEntity 응답
 GET http://localhost:8080/response/entity
-
-### 커스텀 헤더 포함 응답
-GET http://localhost:8080/response/headers
-
-### 빈 응답 (204 No Content)
-GET http://localhost:8080/response/no-content
-
-### 복잡한 객체 리스트 응답
-GET http://localhost:8080/response/complex
-
-### 이미지 응답
-GET http://localhost:8080/response/image

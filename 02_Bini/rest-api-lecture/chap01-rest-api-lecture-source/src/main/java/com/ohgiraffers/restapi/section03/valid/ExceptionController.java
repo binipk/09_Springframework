@@ -6,20 +6,19 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+/* 전역적으로 Exception 발생을 catch해서 handling할 클래스 */
 @RestControllerAdvice
 public class ExceptionController {
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleUserNotFound(UserNotFoundException e) {
+    public ResponseEntity<ErrorResponse> handleuserException(UserNotFoundException e) {
         String code = "ERROR_CODE_00000";
-        String description = "회원정보 조회 실패";
+        String description = "회원 정보 조회 실패";
         String detail = e.getMessage();
 
-        ErrorResponse errorResponse = new ErrorResponse(code, description, detail);
-
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(errorResponse);
+        return new ResponseEntity<>(
+                new ErrorResponse(code, description, detail), HttpStatus.NOT_FOUND
+        );
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -49,6 +48,5 @@ public class ExceptionController {
         return new ResponseEntity<>(
                 new ErrorResponse(code, description, detail), HttpStatus.BAD_REQUEST
         );
-
     }
 }

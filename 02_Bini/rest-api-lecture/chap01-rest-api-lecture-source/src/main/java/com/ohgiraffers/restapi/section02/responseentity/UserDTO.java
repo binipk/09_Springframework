@@ -1,4 +1,3 @@
-/*
 package com.ohgiraffers.restapi.section02.responseentity;
 
 import lombok.AllArgsConstructor;
@@ -16,6 +15,4 @@ public class UserDTO {
     private String id;
     private String pwd;
     private String name;
-
 }
-*/

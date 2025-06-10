@@ -1,17 +1,24 @@
 package com.ohgiraffers.restapi.section04.hateoas;
 
-import com.ohgiraffers.restapi.section02.responseentity.UserDTO;
-import org.springframework.hateoas.CollectionModel;
+import com.ohgiraffers.restapi.section02.responseentity.ResponseMessage;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.Link;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/hateoas")
@@ -26,35 +33,50 @@ public class HateoasController {
         users.add(new UserDTO(3, "user03", "pass03", "이순신"));
     }
 
-    // 전체 유저 조회
     @GetMapping("/users")
-    public ResponseEntity<CollectionModel<EntityModel<UserDTO>>> findAllUsers() {
-        List<EntityModel<UserDTO>> userResources = users.stream()
-                .map(user -> EntityModel.of(
-                        user,
-                        linkTo(methodOn(HateoasController.class).findUserByNo(user.getNo())).withSelfRel()
-                ))
-                .collect(Collectors.toList());
+    public ResponseEntity<ResponseMessage> findAllUsers() {
+        /* Hateoas 설정 */
+        List<EntityModel<UserDTO>> usersWithRel = users.stream().map(
+                user ->
+                        EntityModel.of(
+                                user,
+                                linkTo(methodOn(HateoasController.class).findUserByNo(user.getNo())).withSelfRel(),
+                                linkTo(methodOn(HateoasController.class).findAllUsers()).withRel("users")
+                        )
+        ).toList();
 
-        Link selfLink = linkTo(methodOn(HateoasController.class).findAllUsers()).withSelfRel();
+        /* 응답 바디 설정 */
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("users", usersWithRel);
 
-        return ResponseEntity.ok(CollectionModel.of(userResources, selfLink));
+        /* 응답 메세지 설정 */
+        ResponseMessage responseMessage = new ResponseMessage(200, "조회 성공", responseMap);
+        return ResponseEntity.ok().body(responseMessage);
     }
 
-    // 개별 유저 조회
     @GetMapping("/users/{userNo}")
-    public ResponseEntity<EntityModel<UserDTO>> findUserByNo(@PathVariable int userNo) {
-        UserDTO foundUser = users.stream()
-                .filter(user -> user.getNo() == userNo)
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("해당 유저가 없습니다."));
-
-        EntityModel<UserDTO> userResource = EntityModel.of(
-                foundUser,
-                linkTo(methodOn(HateoasController.class).findUserByNo(userNo)).withSelfRel(),
-                linkTo(methodOn(HateoasController.class).findAllUsers()).withRel("all-users")
+    public ResponseEntity<ResponseMessage> findUserByNo(@PathVariable("userNo") int userNo) {
+        /* 응답 헤더 설정 : JSON 응답이 default 이기는 하나 변경이 필요한 경우 HttpHeaders 설정 변경 */
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(
+                new MediaType("application", "json", StandardCharsets.UTF_8)
         );
 
-        return ResponseEntity.ok(userResource);
+        /* 응답 바디 설정 */
+        Map<String, Object> responseMap = new HashMap<>();
+        UserDTO foundUser = users.stream().filter(user -> user.getNo() == userNo).findFirst().get();
+        responseMap.put("user", foundUser);
+
+        /* 응답 메세지 설정 */
+        ResponseMessage responseMessage = new ResponseMessage(
+                200, "조회 성공", responseMap
+        );
+
+//        return new ResponseEntity<>(responseMessage, httpHeaders, HttpStatus.OK);
+        return ResponseEntity
+                .ok()
+                .headers(httpHeaders)
+                .body(responseMessage);
     }
+
 }

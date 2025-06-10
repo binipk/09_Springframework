@@ -1,11 +1,10 @@
-### GET request to example server
-GET http://localhost:8080/entity/users
-content-type: application/json
+### 신규 회원 등록
+POST http://localhost:8080/entity/users
+Content-Type: application/json
 
 {
   "id": "user04",
   "pwd": "pass04",
   "name": "신사임당"
 }
-
 ###
