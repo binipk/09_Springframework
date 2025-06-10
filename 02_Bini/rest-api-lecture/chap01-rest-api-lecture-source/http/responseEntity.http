@@ -1,0 +1,11 @@
+### GET request to example server
+GET http://localhost:8080/entity/users
+content-type: application/json
+
+{
+  "id": "user04",
+  "pwd": "pass04",
+  "name": "신사임당"
+}
+
+###

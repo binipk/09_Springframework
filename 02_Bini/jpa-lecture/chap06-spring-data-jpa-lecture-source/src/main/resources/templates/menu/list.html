@@ -24,7 +24,7 @@
         <!-- 이전 페이지로 이동 -->
         <button
                 th:onclick="'location.href=\'/menu/list?page=' + @{${paging.currentPage - 1}} + '\''"
-                th:disabled="${ menuList.first }">
+                th:disabled="${ page.first }">
             <
         </button>
         <!-- 숫자 버튼 -->
@@ -37,7 +37,7 @@
         <!-- 다음 페이지로 이동 -->
         <button
                 th:onclick="'location.href=\'/menu/list?page=' + @{${paging.currentPage + 1}} + '\''"
-                th:disabled="${ menuList.last }">
+                th:disabled="${ page.last }">
             >
         </button>
         <!-- 맨 끝으로 이동 -->
