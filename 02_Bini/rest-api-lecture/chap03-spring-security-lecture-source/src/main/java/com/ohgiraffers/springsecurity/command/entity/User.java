@@ -5,10 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "users")
+@Table(name="users")
 @Getter
 @NoArgsConstructor
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,5 +27,4 @@ public class User {
     public void setEncodedPassword(String encodedPassword) {
         this.password = encodedPassword;
     }
-
-}   
+}

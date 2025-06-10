@@ -12,18 +12,15 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserQueryService {
+public class UserQuerService {
 
     private final UserMapper userMapper;
 
     public UserDetailResponse getUserDetail(String username) {
-        UserDto userDto = Optional.ofNullable(
+        UserDto user = Optional.ofNullable(
                 userMapper.findUserByUsername(username)
-        ).orElseThrow(() -> new RuntimeException("유저 못찾음"));
-
-        return UserDetailResponse.builder()
-                .user(userDto)
-                .build();
+        ).orElseThrow(() -> new RuntimeException("유저 정보 찾지 못함"));
+        return UserDetailResponse.builder().user(user).build();
     }
 
     public UserListResponse getAllUsers() {

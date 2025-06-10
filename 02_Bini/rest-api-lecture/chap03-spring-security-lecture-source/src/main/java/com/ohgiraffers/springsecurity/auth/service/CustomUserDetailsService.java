@@ -1,5 +1,6 @@
 package com.ohgiraffers.springsecurity.auth.service;
 
+import com.ohgiraffers.springsecurity.command.entity.User;
 import com.ohgiraffers.springsecurity.command.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,13 +19,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        com.ohgiraffers.springsecurity.command.entity.User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("유저 못찾음!!"));
-
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("유저 찾지 못함"));
         return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
-                user.getPassword(),
-                Collections.singleton(new SimpleGrantedAuthority(user.getRole().name())) // ← 괄호 추가
+             user.getUsername(),
+             user.getPassword(),
+             Collections.singleton(new SimpleGrantedAuthority(user.getRole().name()))
         );
     }
 }

@@ -7,6 +7,7 @@ import java.util.List;
 
 @Mapper
 public interface UserMapper {
+
     UserDto findUserByUsername(String username);
 
     List<UserDto> findAllUsers();

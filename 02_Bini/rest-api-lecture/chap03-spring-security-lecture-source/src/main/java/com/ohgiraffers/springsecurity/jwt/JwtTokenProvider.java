@@ -85,5 +85,4 @@ public class JwtTokenProvider {
                 .getPayload();
         return claims.getSubject();
     }
-
 }

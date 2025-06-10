@@ -1,5 +1,4 @@
-package com.ohgiraffers.springsecurity.command.dto.request;
-
+package com.ohgiraffers.springsecurity.command.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -7,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class UserCreateRequest {
-
-    private final String username; // username 이라고 많이 씀
+    private final String username;
     private final String password;
+    // 추가 회원 가입 시 필요한 데이터 ...추가
 }

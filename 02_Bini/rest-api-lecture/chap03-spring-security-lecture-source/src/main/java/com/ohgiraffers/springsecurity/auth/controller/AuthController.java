@@ -21,37 +21,38 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<TokenResponse>> login(@RequestBody LoginRequest request) {
-
+    public ResponseEntity<ApiResponse<TokenResponse>> login(@RequestBody LoginRequest request){
         TokenResponse tokenResponse = authService.login(request);
         return buildTokenResponse(tokenResponse);
     }
-    
+
     @PostMapping("/refresh")
     public ResponseEntity<ApiResponse<TokenResponse>> refreshToken(
-            @CookieValue(name = "refreshToken", required = false) String refreshToken // HttpOnly 쿠키에서 읽어옴
-    ) {
-        if (refreshToken == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // refreshToken이 없으면 401반환함
-        }
-        TokenResponse tokenResponse = authService.refreshToken((refreshToken));
-        return buildTokenResponse(tokenResponse);
+            @CookieValue(name="refreshToken", required = false) String refreshToken // HttpOnly쿠키에서 읽어온다.
+    ){
+            if(refreshToken == null){
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // refreshToken이 없으면 401반환
+            }
+            TokenResponse tokenResponse = authService.refreshToken(refreshToken);
+            return buildTokenResponse(tokenResponse);
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<ApiResponse<TokenResponse>> logout(
-            @CookieValue(name="refreshToken",required=false)String refreshToken) {
-        if (refreshToken != null) {
+    public ResponseEntity<ApiResponse<Void>> logout(
+            @CookieValue(name="refreshToken", required = false) String refreshToken // HttpOnly쿠키에서 읽어온다.
+    ){
+        if(refreshToken != null){
             authService.logout(refreshToken);
         }
 
-        ResponseCookie deleteCookie = createDeleteRefreshTokenCookie(); // 만료용 쿠키 생성
+        ResponseCookie deleteCookie = createDeleteRefreshTokenCookie();  // 만료용 쿠키 생성
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, deleteCookie.toString())
                 .body(ApiResponse.success(null));
     }
 
-    /* accessToken과 refreshToken을 body와 쿠키에 담아서 반환할거임*/
+
+    /* accesToken과 refreshToken을 body와 쿠키에 담아 반환 */
     private ResponseEntity<ApiResponse<TokenResponse>> buildTokenResponse(TokenResponse tokenResponse) {
         ResponseCookie cookie = createRefreshTokenCookie(tokenResponse.getRefreshToken());
         return ResponseEntity.ok()
@@ -88,6 +89,4 @@ public class AuthController {
                 .sameSite("Strict") // SameSite 유지
                 .build();
     }
-
-
 }
